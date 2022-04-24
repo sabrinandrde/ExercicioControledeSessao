@@ -1,0 +1,51 @@
+<%-- any content can be specified here e.g.: --%>
+<%@page import="java.util.Set"%>
+<%@page import="java.util.HashSet"%>
+<%@ page pageEncoding="UTF-8" %>
+<% 
+    if(request.getParameter("logon")!=null){
+        String username = request.getParameter("username");
+        session.setAttribute("username", username);
+        
+        Set<Integer> loteria = new HashSet<>();
+        int i = 0;
+        while (i < 6) {
+            int numeroAleatorio = (int) Math.floor(Math.random() * 99) + 1;
+            if (!loteria.contains(numeroAleatorio)) {
+                loteria.add(numeroAleatorio);
+                i++;
+            }
+        }
+        session.setAttribute("loteria", loteria);
+        
+        response.sendRedirect(request.getRequestURI());
+    }
+    if(request.getParameter("logoff")!=null){
+        session.removeAttribute("username");
+        response.sendRedirect(request.getRequestURI());
+    }
+%>
+
+<h1>SabrinaAPP</h1>
+
+<%if(session.getAttribute("username")==null) {%>
+    <div>
+        <h3>Faça Login para ter acesso ao Site</h3>
+    </div>
+    <form>
+        <input type="text" name="username"/>
+        <input type="submit" name="logon" value="Entrar"/>
+    </form>
+<%}else{%>
+    <form>
+        <a href="index.jsp">Inicio</a> |
+        <a href="about.jsp">Minhas Informações</a> |
+        <a href="loteria.jsp">Dicas para Loteria</a> |
+        <h4>Bem Vindo, <%=session.getAttribute("username")%></h4> 
+        <input type="submit" name="logoff" value="Sair"> 
+    </form>
+<%}%>
+<hr/>
+
+
+
